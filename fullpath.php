@@ -1,4 +1,3 @@
 <?php
-$myPath = __FILE__;
-$rpath = realpath($myPath);
+echo __FILE__;
 ?>
