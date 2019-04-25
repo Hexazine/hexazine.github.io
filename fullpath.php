@@ -1,3 +1,4 @@
 <?php
-echo __FILE__;
+$path = realpath("./fullpath.php");
+print($path);
 ?>
