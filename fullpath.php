@@ -1,4 +1,5 @@
 <?php
-$path = realpath("./fullpath.php");
+$dotpath = "./fullpath.php";
+$path = realpath($dotpath);
 print($path);
 ?>
