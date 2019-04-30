@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="stylesheet.css">
   </head>
   <body>
-    <?php
+    <p><?php
       //$path = "hexazine.github.io/index.html";
       //$fullpath = realpath($path);
       echo 'aaaaa';
-    ?>
+    ?></p>
   </body>
 </html>
