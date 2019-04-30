@@ -7,8 +7,8 @@
   </head>
   <body>
     <p><?php
-      //$path = "hexazine.github.io/index.html";
-      //$fullpath = realpath($path);
+      $path = "hexazine.github.io/index.html";
+      $fullpath = realpath($path);
       echo 'aaaaa';
     ?></p>
   </body>
