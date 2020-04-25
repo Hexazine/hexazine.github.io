@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="ja">
 <html>
   <head>
     <meta charset="utf-8">
@@ -6,6 +7,7 @@
     <link rel="stylesheet" href="stylesheet.css">
   </head>
   <body>
+    <p>aaaaa</p>
     <p><?php
       $path = "hexazine.github.io/index.html";
       $fullpath = realpath($path);
