@@ -1,2 +1,2 @@
 # hexazine.github.io
-self-introduction
+self-introductio
