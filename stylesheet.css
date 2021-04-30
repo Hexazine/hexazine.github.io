@@ -1,12 +1,12 @@
-html, body, ul, ol, li, h1, h2, h3, h4, h5, h6, p, div {
-  margin: 0;
-  padding: 0;
+html,body,ul,ol,li,h1,h2,h3,h4,h5,h6,p,div{
+  margin:0;
+  padding:0;
 }
 body {
-  color: #b0b0b0;
-  background-color: #404040;
+  color:#ccc;
+  background-color:#222;
 }
-.title {
-  color: #9400d3;
-  margin: 0 auto;
+.title{
+  color:#9400d3;
+  margin:0 auto;
 }
