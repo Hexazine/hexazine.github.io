@@ -2,7 +2,7 @@ html, body, ul, ol, li, h1, h2, h3, h4, h5, h6, p, div {
   margin: 0;
   padding: 0;
 }
-*{
+body {
   color: #b0b0b0;
   background-color: #404040;
 }
