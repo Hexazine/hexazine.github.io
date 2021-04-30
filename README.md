@@ -1,2 +1,2 @@
-# αmus memo
+# αmusement
 とりあえず作ってみた
