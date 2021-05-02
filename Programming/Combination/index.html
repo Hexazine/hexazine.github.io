@@ -37,6 +37,26 @@
         \[0\leq n,r\leq 10^{18},\ 2\leq m\leq 2\times 10^9\]
         を計算できるものは載っていなかった。しかし1年前にこの制約で解く方法を思いついたのでメモしておく。
       </div>
+      <h2>方針</h2><hr color="black">
+      <div class="text">
+        多分一番嫌な条件が「\(m\) は任意mod」なので、まずはこれをどうにかする<br>
+        合成数を法とした値を計算する時、典型テクニックとして「\(m=\prod_{i=1}^{k}p_i^{e_i}\) ( \(p\) は素数)と素因数分解して、各 \(p^e\) を法とした値を計算してからGarnerのアルゴリズムで復元する」というものがあるので、試してみる<br>
+        <br>
+        \(e\geq 2\) となるものを考える。\(m\leq 2\times 10^9\) を考慮すると、\(e=2\) の時でさえ \(p\lt 5\times 10^4\) であり、\(pe\lt 10^5\) であることが分かる。
+        \(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) は次に記す方法で \(\mathcal{O}\left(pe+e\log n\right)\) で計算できるため、十分高速に求まる。<br>
+        \(e=1\) のとき、\(pe\approx 2\times 10^9\) となることがあるので先程と同じようにはいかないが、\(p\) が素数であるからLucasの定理がそのまま適用できる。よって
+        \[_{n'}\mathrm{C}_{r'}\ \mathrm{mod}\ p \quad (0\leq n',r'\lt p,\ 2\leq p\lt 2\times 10^9,\ pは素数)\]
+        を高速に求められればよい。ここで、
+        \[_{n'}\mathrm{C}_{r'}=\frac{n'!}{r'!(n'-r')!}\]
+        であることと、\(n',r'\lt p\) であり各階乗は \(p\) で割り切れないことから、結局各階乗 \(\mathrm{mod}\ p\) を高速に計算できればよいことが分かる。
+        これは別個で記した<a href="../Factorial">この</a>方法で \(\mathcal{O}\left(\sqrt p\log p\right)\)で求められるので、OK<br>
+        <br>
+        計算量評価は難しすぎるので妥協
+      </div>
+      <h2>\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) を高速に求める</h2><hr color="black">
+      <div class="text">
+        <a href="https://min-25.hatenablog.com/entry/2017/11/01/185400">この記事</a>を参考にした。
+      </div>
     </div>
     <footer id="footer">
       <div class="footer-left">
