@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      任意mod二項係数
+    </title>
+    <link rel="stylesheet" href="../../css/memo.css">
+    <link rel="stylesheet" href="../../css/memores.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+    <link rel="icon" href="../../images/amusement.ico">
+    <link rel="apple-touch-icon" sizes="3833x3833" href="../../images/amusement-high.jpg">
+
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <script type="text/javascript" src="../../js/footerFixed.js"></script>
+  </head>
+  <body link="1a0dab" vlink="882c99" alink="882c99">
+    <div class="title">
+      <img src="../../images/rate.jpg" width="100">
+      <h1>αmus memo</h1>
+    </div>
+    <div class="date">
+      <p>2021/05/02(日)</p>
+    </div>
+    <div class="main">
+      <h1>任意mod二項係数</h1>
+      <div class="text">
+        競プロでの \(_n\mathrm{C}_r\ \mathrm{mod}\ m\) の求め方は用途に応じて色々存在する。
+        例えば最も有名そうなものとして、素数modで \(n\) がある程度小さいとき、階乗及びその逆元を \(\mathcal{O}\left(n\right)\) で列挙しておくことで \(\mathcal{O}\left(1\right)\) で二項係数を計算できるというテクニックがある。
+        素数modでないとき一気にややこしくなるが、例えば<a href="https://qiita.com/suisen_cp/items/d0ab7e728b98bbec818f">この</a>ような方法で  \(_n\mathrm{C}_0,\ _n\mathrm{C}_1,\ \cdots \ ,\ _n\mathrm{C}_n\ \mathrm{mod}\ m\) を \(\mathcal{O}\left(\frac{n\log{m}}{\log\log{m}}\right)\) で列挙できる。<br>
+        これらは列挙できるという面で非常に有効であり、大概の問題はこれで解決するのだが、両者とも \(n\) が \(10^7\) を超えた辺りから計算に多大な時間がかかってしまう。<br>
+        \[n,r,m\ が与えられます。\ _n\mathrm{C}_r\ \mathrm{mod}\ m\ を計算して下さい。\]
+        という問題が与えられたとき、制約をどのくらい緩められるのかを今から丁度1年前、自粛期間中の頃に考えたことがあった。
+        <a href="https://w.atwiki.jp/uwicoder/pages/2118.html">ここ</a>に載っているテクニックでかなり広い制約をカバーできることが分かるが、最強の制約(大方全ての二項係数を計算するという制約)、
+        \[0\leq n,r\leq 10^{18},\ 2\leq m\leq 2\times 10^9\]
+        を計算できるものは載っていなかった。しかし1年前にこの制約で解く方法を思いついたのでメモしておく。
+      </div>
+    </div>
+    <footer id="footer">
+      <div class="footer-left">
+        <a href="https://twitter.com/srim0715" class="twitter"><i class="fab fa-twitter"></i></a>
+      </div>
+      <div class="footer-right">
+        <p>αmusement 2021-2021</p>
+        <p>Last Update: 2021/05/02</p>
+      </div>
+    </footer>
+  </body>
+</html> 
