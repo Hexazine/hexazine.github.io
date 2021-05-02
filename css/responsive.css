@@ -14,7 +14,7 @@
     width: 200px;
     height: 100%;
     background: var(--nav-background);
-    margin-top: var(--nav-height);
+    margin-top: 49px;
     transition: 0.5s ease-out;
   }
   .nav-links li{
@@ -37,13 +37,25 @@
     width: 100px;
     margin-top: 50px;
     margin-bottom: 0;
-    border-radius: 50%;
-    filter: drop-shadow(0 0 10px #ddd);
   }
   .title h1{
-    color: #9400d3;
     padding-bottom: 15px;
     font-size: 30px;
-    text-shadow: 0 0 10px #ddd;
+  }
+  .profile h1{
+    font-size: 25px;
+  }
+  .profile p{
+    font-size: 15px;
+  }
+  footer{
+    padding: 20px 0;
+  }
+  .footer-left{
+    margin: 0 0 0 20px;
+  }
+  .footer-right p{
+    font-size: 12px;
+    padding: 5px 20px 5px 0;
   }
 }
