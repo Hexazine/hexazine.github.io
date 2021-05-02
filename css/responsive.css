@@ -1,0 +1,49 @@
+@media screen and (max-width: 700px) {
+  :root {
+    --nav-height: 50px;
+    --nav-background: #111;
+  }
+  .logo{
+    margin-left: 10px;
+  }
+  .nav-links{
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 100%;
+    width: 200px;
+    height: 100%;
+    background: var(--nav-background);
+    margin-top: var(--nav-height);
+    transition: 0.5s ease-out;
+  }
+  .nav-links li{
+    height: var(--nav-height);
+    line-height: var(--nav-height);
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+    display: block;
+  }
+  .menu{
+    display: block;
+    margin-top: 15px;
+    margin-right: 20px;
+  }
+  .menu.toggle + .nav-links{
+    transform: translateX(-100%);
+  }
+  .title img{
+    width: 100px;
+    margin-top: 50px;
+    margin-bottom: 0;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 10px #ddd);
+  }
+  .title h1{
+    color: #9400d3;
+    padding-bottom: 15px;
+    font-size: 30px;
+    text-shadow: 0 0 10px #ddd;
+  }
+}
