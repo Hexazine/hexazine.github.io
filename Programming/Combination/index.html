@@ -9,6 +9,7 @@
     </title>
     <link rel="stylesheet" href="../../css/memo.css">
     <link rel="stylesheet" href="../../css/memores.css">
+    <link rel="stylesheet" href="../../css/date.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
     <link rel="icon" href="../../images/amusement.ico">
     <link rel="apple-touch-icon" sizes="3833x3833" href="../../images/amusement-high.jpg">
@@ -22,15 +23,16 @@
       <h1>αmus memo</h1>
     </div>
     <div class="date">
-      <p>2021/05/02(日)</p>
+      <p>作成日: 2021/05/02(日)</p>
+      <p>最終更新日: 2021/05/02(日)</p>
     </div>
     <div class="main">
       <h1>任意mod二項係数</h1>
       <div class="text">
         競プロでの \(_n\mathrm{C}_r\ \mathrm{mod}\ m\) の求め方は用途に応じて色々存在する。
-        例えば最も有名そうなものとして、素数modで \(n\) がある程度小さいとき、階乗及びその逆元を \(\mathcal{O}\left(n\right)\) で列挙しておくことで \(\mathcal{O}\left(1\right)\) で二項係数を計算できるというテクニックがある。
-        素数modでないとき一気にややこしくなるが、例えば<a href="https://qiita.com/suisen_cp/items/d0ab7e728b98bbec818f">この</a>ような方法で  \(_n\mathrm{C}_0,\ _n\mathrm{C}_1,\ \cdots \ ,\ _n\mathrm{C}_n\ \mathrm{mod}\ m\) を \(\mathcal{O}\left(\frac{n\log{m}}{\log\log{m}}\right)\) で列挙できる。<br>
-        これらは列挙できるという面で非常に有効であり、大概の問題はこれで解決するのだが、両者とも \(n\) が \(10^7\) を超えた辺りから計算に多大な時間がかかってしまう。<br>
+        例えば最も有名そうなものとして、素数modで \(n\) がある程度小さいとき、階乗及びその逆元を \(O\left(n\right)\) で列挙しておくことで \(O\left(1\right)\) で二項係数を計算できるというテクニックがある。
+        素数modでないとき一気にややこしくなるが、例えば<a href="https://qiita.com/suisen_cp/items/d0ab7e728b98bbec818f">この</a>ような方法で  \(_n\mathrm{C}_0,\ _n\mathrm{C}_1,\ \cdots \ ,\ _n\mathrm{C}_n\ \mathrm{mod}\ m\) を \(O\left(\frac{n\log{m}}{\log\log{m}}\right)\) で列挙できる。<br>
+        　これらは列挙できるという面で非常に有効であり、大概の問題はこれで解決するのだが、両者とも \(n\) が \(10^7\) を超えた辺りから計算に多大な時間がかかってしまう。<br>
         \[n,r,m\ が与えられます。\ _n\mathrm{C}_r\ \mathrm{mod}\ m\ を計算して下さい。\]
         という問題が与えられたとき、制約をどのくらい緩められるのかを今から丁度1年前、自粛期間中の頃に考えたことがあった。
         <a href="https://w.atwiki.jp/uwicoder/pages/2118.html">ここ</a>に載っているテクニックでかなり広い制約をカバーできることが分かるが、最強の制約(大方全ての二項係数を計算するという制約)、
@@ -40,18 +42,20 @@
       <h2>方針</h2><hr color="black">
       <div class="text">
         多分一番嫌な条件が「\(m\) は任意mod」なので、まずはこれをどうにかする<br>
-        合成数を法とした値を計算する時、典型テクニックとして「\(m=\prod_{i=1}^{k}p_i^{e_i}\) ( \(p\) は素数)と素因数分解して、各 \(p^e\) を法とした値を計算してからGarnerのアルゴリズムで復元する」というものがあるので、試してみる<br>
+        　合成数を法とした値を計算する時、典型テクニックとして「\(m=\prod_{i=1}^{k}p_i^{e_i}\) ( \(p\) は素数)と素因数分解して、各 \(p^e\) を法とした値を計算してからGarnerのアルゴリズムで復元する」というものがあるので、試してみる 
+        (Garnerのアルゴリズムは<a href="../AMC">これ</a>を見ればわかる 計算量は \(O\left(k^2+ke\log p\right)\) だが、\(k\leq 9\) なので復元にかかる時間は虚無)
         <br>
-        \(e\geq 2\) となるものを考える。\(m\leq 2\times 10^9\) を考慮すると、\(e=2\) の時でさえ \(p\lt 5\times 10^4\) であり、\(pe\lt 10^5\) であることが分かる。
-        \(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) は次に記す方法で \(\mathcal{O}\left(pe+e\log n\right)\) で計算できるため、十分高速に求まる。<br>
-        \(e=1\) のとき、\(pe\approx 2\times 10^9\) となることがあるので先程と同じようにはいかないが、\(p\) が素数であるからLucasの定理がそのまま適用できる。よって
+        　\(e\geq 2\) となるものを考える。\(m\leq 2\times 10^9\) を考慮すると、\(e=2\) の時でさえ \(p\lt 5\times 10^4\) であり、\(pe\lt 10^5\) であることが分かる。
+        \(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) は次に記す方法で \(O\left(pe+e\log n\right)\) で計算できる。全ての \(p^e\) で計算しても \(O\left(kpe+ke\log n\right)\) であり、十分高速である。<br>
+        　\(e=1\) のとき、\(pe\approx 2\times 10^9\) となることがあるので先程と同じようにはいかないが、\(p\) が素数であるからLucasの定理がそのまま適用できる。よって
         \[_{n'}\mathrm{C}_{r'}\ \mathrm{mod}\ p \quad (0\leq n',r'\lt p,\ 2\leq p\lt 2\times 10^9,\ pは素数)\]
         を高速に求められればよい。ここで、
-        \[_{n'}\mathrm{C}_{r'}=\frac{n'!}{r'!(n'-r')!}\]
+        \[_{n'}\mathrm{C}_{r'}=\begin{cases}\frac{n'!}{r'!(n'-r')!}&(n'\geq r')\\0&(n'\lt r')\end{cases}\]
         であることと、\(n',r'\lt p\) であり各階乗は \(p\) で割り切れないことから、結局各階乗 \(\mathrm{mod}\ p\) を高速に計算できればよいことが分かる。
-        これは別個で記した<a href="../Factorial">この</a>方法で \(\mathcal{O}\left(\sqrt p\log p\right)\)で求められるので、OK<br>
+        これは別個で記した<a href="../Factorial">この</a>方法で \(O\left(\sqrt p\log p\right)\)で求められるので、OK<br>
+        　この計算を何度も行うと時間がかかりそうだが、 \(5\times 10^4\) 以上の \(p\) は高々1つしかないため問題ない。
         <br>
-        計算量評価は難しすぎるので妥協
+        全体の計算量評価はよく分からんので妥協
       </div>
       <h2>\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) を高速に求める</h2><hr color="black">
       <div class="text">
@@ -63,8 +67,8 @@
         <a href="https://twitter.com/srim0715" class="twitter"><i class="fab fa-twitter"></i></a>
       </div>
       <div class="footer-right">
-        <p>αmusement 2021-2021</p>
-        <p>Last Update: 2021/05/02</p>
+        <p>αmusement 2021-<span class="last-year"></p>
+        <p>Last Update: <span class="update"></p>
       </div>
     </footer>
   </body>

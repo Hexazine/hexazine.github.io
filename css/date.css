@@ -1,0 +1,6 @@
+.last-year:before{
+  content: "2021";
+}
+.update:before{
+  content: "2021/05/02";
+}
