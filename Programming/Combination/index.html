@@ -37,7 +37,8 @@
         という問題が与えられたとき、制約をどのくらい緩められるのかを今から丁度1年前、自粛期間中の頃に考えたことがあった。
         <a href="https://w.atwiki.jp/uwicoder/pages/2118.html">ここ</a>に載っているテクニックでかなり広い制約をカバーできることが分かるが、最強の制約(大方全ての二項係数を計算するという制約)、
         \[0\leq n,r\leq 10^{18},\ 2\leq m\leq 2\times 10^9\]
-        を計算できるものは載っていなかった。しかし1年前にこの制約で解く方法を思いついたのでメモしておく。
+        を計算できるものは載っていなかった。しかし1年前にこの制約で解く方法を思いついたのでメモしておく。<br>
+        　...流石に多分既出 でもまあ日本語サイトは見つからなかったから...
       </div>
       <h2>方針</h2><hr color="black">
       <div class="text">
@@ -46,7 +47,7 @@
         (Garnerのアルゴリズムは<a href="../AMC">これ</a>を見ればわかる 計算量は \(O\left(k^2+ke\log p\right)\) だが、\(k\leq 9\) なので復元にかかる時間は虚無)
         <br>
         　\(e\geq 2\) となるものを考える。\(m\leq 2\times 10^9\) を考慮すると、\(e=2\) の時でさえ \(p\lt 5\times 10^4\) であり、\(pe\lt 10^5\) であることが分かる。
-        \(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) は次に記す方法で \(O\left(pe+e\log n\right)\) で計算できる。全ての \(p^e\) で計算しても \(O\left(kpe+ke\log n\right)\) であり、十分高速である。<br>
+        \(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) は後述の方法で \(O\left(pe+e\log n\right)\) で計算できる。全ての \(p^e\) で計算しても \(O\left(kpe+ke\log n\right)\) であり、十分高速である。<br>
         　\(e=1\) のとき、\(pe\approx 2\times 10^9\) となることがあるので先程と同じようにはいかないが、\(p\) が素数であるからLucasの定理がそのまま適用できる。よって
         \[_{n'}\mathrm{C}_{r'}\ \mathrm{mod}\ p \quad (0\leq n',r'\lt p,\ 2\leq p\lt 2\times 10^9,\ pは素数)\]
         を高速に求められればよい。ここで、
@@ -59,7 +60,26 @@
       </div>
       <h2>\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) を高速に求める</h2><hr color="black">
       <div class="text">
-        <a href="https://min-25.hatenablog.com/entry/2017/11/01/185400">この記事</a>を参考にした。
+        \(_n\mathrm{C}_r\) の計算に割り算が含まれているので \(\mathrm{mod}\ p^e\) で計算しにくい(0除算になり得る)訳だが、\(_n\mathrm{C}_r\) を \(p\) で割れるだけ割ったものなら考えやすいので(0除算にならない)、 \(\frac{_n\mathrm{C}_r}{p^x}\cdot p^x\) として計算しよう、という方針。<br>
+        <br>
+        \((x!)_p\) を「\(x\) 以下の非負整数の中で \(x\) の倍数でないものの積」と定義する。
+        また、\(n_i,\ r_i,\ (n-r)_i\) をそれぞれ \(n,\ r,\ n-r\) を \(p\) 進数表示したときの \(i\) 桁目の数字(最初の桁は0桁目)と定義する。
+        そして、\(n\) の( \(p\) 進数表示での)桁数を \(d+1\) とおく。すなわち、
+        \[n=\sum_{i=0}^dn_ip^i\quad(n=n_dn_{d-1}\cdots n_1n_0)\]
+        である。さらに、\(N_i,\ R_i,\ (N-R)_i\) をそれぞれ \(n,\ r,\ n-r\) の \(i\) 桁目から \(i+e-1\) 桁目までの部分列と定義する。すなわち、
+        \[N_i=\sum_{j=0}^{e-1}n_{i+j}p^j=\left[\frac{n}{p^i}\right]\ \mathrm{mod}\ p^e\]
+        である。[]はガウス記号である。(例えば \(n\) が \(p\) 進数表示で6543210、\(e\) が3であった場合、\(n_2=2,\ N_2=432\) である。)<br>
+        　まず \((n!)_p\) について、
+        \[(n!)_p=\left(\prod_{i=0}^{\left[n/p^e\right]-1}\prod_{1\le j\lt p^e,\ p\ \nmid\ j}\left(ip^e+j\right)\right)\left(\prod_{1\le j\le N_0,\ p\ \nmid\ j}\left(\left[\frac{n}{p^e}\right]p^e+j\right)\right)\]
+        がいえる。\(n=up^e+v\ \left(u=\left[\frac{n}{p^e}\right],\ v=n\ \mathrm{mod}\ p^e=N_0\right)\) とおいたときの「1以上 \(up^e\) 未満の積」と「\(up^e\) 以上 \(n\) 以下の積」を別々に計算するイメージである。
+        この式の \(\mathrm{mod}\ p^e\) を求めると、式中に現れる \(p^e\) の項が全て消えるので
+        \[(n!)_p\equiv\left(\prod_{1\le j\lt p^e,\ p\ \nmid\ j}j\right)^\left[\frac{n}{p^e}\right]\left(\prod_{1\le j\le N_0,\ p\ \nmid\ j}j\right)=\left(\left(p^e!\right)_p\right)^\left[n/p^e\right]\left(N_0!\right)_p\quad(\mathrm{mod}\ p^e)\]
+        となる。<br>
+        　ところで、式中の \(\left(\left(p^e!\right)_p\right)\ \mathrm{mod}\ p^e\) が簡略化できそうである。
+      </div>
+      <h2>参考文献</h2><hr color="black">
+      <div class="text">
+        <a href="https://min-25.hatenablog.com/entry/2017/11/01/185400">二項係数 mod Prime Power - memo</a>
       </div>
     </div>
     <footer id="footer">
