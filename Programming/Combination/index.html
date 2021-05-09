@@ -29,7 +29,7 @@
     <div class="main">
       <h1>任意mod二項係数</h1>
       <div class="text">
-        競プロでの \(_n\mathrm{C}_r\ \mathrm{mod}\ m\) の求め方は用途に応じて色々存在する。
+        <!--競プロでの \(_n\mathrm{C}_r\ \mathrm{mod}\ m\) の求め方は用途に応じて色々存在する。
         例えば最も有名そうなものとして、素数modで \(n\) がある程度小さいとき、階乗及びその逆元を \(O\left(n\right)\) で列挙しておくことで \(O\left(1\right)\) で二項係数を計算できるというテクニックがある。
         素数modでないとき一気にややこしくなるが、例えば<a href="https://qiita.com/suisen_cp/items/d0ab7e728b98bbec818f">この</a>ような方法で  \(_n\mathrm{C}_0,\ _n\mathrm{C}_1,\ \cdots \ ,\ _n\mathrm{C}_n\ \mathrm{mod}\ m\) を \(O\left(\frac{n\log{m}}{\log\log{m}}\right)\) で列挙できる。<br>
         　これらは列挙できるという面で非常に有効であり、大概の問題はこれで解決するのだが、両者とも \(n\) が \(10^7\) を超えた辺りから計算に多大な時間がかかってしまう。<br>
@@ -38,16 +38,20 @@
         <a href="https://w.atwiki.jp/uwicoder/pages/2118.html">ここ</a>に載っているテクニックでかなり広い制約をカバーできることが分かるが、最強の制約(大方全ての二項係数を計算するという制約)、
         \[0\leq n,r\leq 10^{18},\ 2\leq m\leq 2\times 10^9\]
         を計算できるものは載っていなかった。しかし1年前にこの制約で解く方法を思いついたのでメモしておく。<br>
+        　...流石に多分既出 でもまあ日本語サイトは見つからなかったから...-->
+        \[n,r,m\ が与えられます。\ _n\mathrm{C}_r\ \mathrm{mod}\ m\ を計算して下さい。\]
+        この問題の制約をどのくらい厳しくできるのかを今から丁度1年前、自粛期間中に考えていたが、最強の制約(大方全ての二項係数を計算するという制約)である
+        \[0\leq n,r\leq 10^{18},\ 2\leq m\leq 2\times 10^9\]
+        で解く方法を思いついたのでメモしておく。<br>
         　...流石に多分既出 でもまあ日本語サイトは見つからなかったから...
       </div>
       <h2>方針</h2><hr color="black">
       <div class="text">
         多分一番嫌な条件が「\(m\) は任意mod」なので、まずはこれをどうにかする<br>
-        　合成数を法とした値を計算する時、典型テクニックとして「\(m=\prod_{i=1}^{k}p_i^{e_i}\) ( \(p\) は素数)と素因数分解して、各 \(p^e\) を法とした値を計算してからCRT(中国剰余定理)で復元する」というものがあるので、試してみる 
-        (CRTの計算量は \(O\left(ke\log p\right)\) だが、\(k\leq 9\) なので復元にかかる時間は虚無)
+        　合成数を法とした値を計算する時、典型テクニックとして「\(m=\prod_{i=1}^{k}p_i^{e_i}\) ( \(p\) は素数)と素因数分解して、各 \(p^e\) を法とした値を計算してからCRT(中国剰余定理)で復元する」というものがあるので、試してみる
         <br>
         　\(e\geq 2\) となるものを考える。\(m\leq 2\times 10^9\) を考慮すると、\(e=2\) の時でさえ \(p\lt 5\times 10^4\) であり、\(pe\lt 10^5\) であることが分かる。
-        \(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) は後述の方法で \(O\left(pe+e\log n\right)\) で計算できる。全ての \(p^e\) で計算しても \(O\left(kpe+ke\log n\right)\) であり、十分高速である。<br>
+        \(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) は後述の方法で \(O\left(pe+e\frac{\log n}{\log p}\right)\) で計算できる。全ての \(p^e\) で計算しても \(O\left(kpe+ke\frac{\log n}{\log p}\right)\) であり、\(k\leq 9\) なので十分高速である。<br>
         　\(e=1\) のとき、\(pe\approx 2\times 10^9\) となることがあるので先程と同じようにはいかないが、\(p\) が素数であるからLucasの定理がそのまま適用できる。よって
         \[_{n'}\mathrm{C}_{r'}\ \mathrm{mod}\ p \quad (0\leq n',r'\lt p,\ 2\leq p\lt 2\times 10^9,\ pは素数)\]
         を高速に求められればよい。ここで、
@@ -55,8 +59,6 @@
         であることと、\(n',r'\lt p\) であり各階乗は \(p\) で割り切れないことから、結局各階乗 \(\mathrm{mod}\ p\) を高速に計算できればよいことが分かる。
         これは別個で記した<a href="../Factorial">この</a>方法で \(O\left(\sqrt p\log p\right)\)で求められるので、OK<br>
         　この計算を何度も行うと時間がかかりそうだが、 \(5\times 10^4\) 以上の \(p\) は高々1つしかないため問題ない。
-        <br>
-        全体の計算量評価はよく分からんので妥協
       </div>
       <h2>\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\) を高速に求める</h2><hr color="black">
       <div class="text">
@@ -99,8 +101,50 @@
         \(k_i\) は \(O\left(\log n\right)\) で愚直に求まるので、\((x!)_p\ \mathrm{mod}\ p^e\) が高速に求まればよい。
       </div>
       <h2>\((x!)_p\ \mathrm{mod}\ p^e\) を高速に求める</h2><hr color="black">
-      <div>
-
+      <div class="text">
+        \(x=up+v\) (\(u=\left[\frac{x}{p}\right],\ v=x\ \mathrm{mod}\ p\))とおくと、
+        \[((up+v)!)_p=\left(\prod_{i=0}^{u-1}\prod_{k=1}^{p-1}(ip-k)\right)\cdot\prod_{k=1}^v(up-k)\]
+        これに第1種スターリング数の定義
+        \[\prod_{k=0}^{n-1}(x+k)=\prod_{k=0}^n\genfrac[]{0pt}{}{n}{k}x^k\]
+        を代入して、
+        \[((up+v)!)_p\equiv \left(\prod_{i=0}^{u-1}\left(\sum_{k=0}^{e-1}(ip)^k\genfrac[]{0pt}{}{p}{k+1}\right)\right)\cdot\left(\sum_{k=0}^{e-1}(up)^k\genfrac[]{0pt}{}{v+1}{k+1}\right)\quad\left(\mathrm{mod}\ p^e\right)\]
+        \(p^e\) 以上の項を無視することで、\(p-1\) 個や \(v\) 個の総積が \(e\) 個の総和に置き換わった。これを式変形して、
+        \[((up+v)!)_p\equiv\genfrac[]{0pt}{}{p}{1}^u\left(\prod_{i=0}^{u-1}\left(1+\sum_{k=1}^{e-1}\frac{\genfrac[]{0pt}{}{p}{k+1}}{\genfrac[]{0pt}{}{p}{1}}(ip)^k\right)\right)\cdot\left(\sum_{k=0}^{e-1}(up)^k\genfrac[]{0pt}{}{v+1}{k+1}\right)\quad\left(\mathrm{mod}\ p^e\right)\]
+        ここで、
+        \[a_k=\frac{\genfrac[]{0pt}{}{p}{k+1}}{\genfrac[]{0pt}{}{p}{1}}\ \mathrm{mod}\ p^e,\quad f(u)=\prod_{i=0}^{u-1}\left(1+\sum_{k=1}^{e-1}a_k(ip)^k\right)\]
+        \[g_0(u)=1,\quad g_k(u)=\sum_{j=1}^k\left(\sum_{i=0}^{u-1}s_{k-j}(i)\cdot i^j\right)a_j\]
+        とおくと、\(f\) を展開して整理することで、
+        \[f(u)\equiv \sum_{k=0}^{e-1}g_k(u)p^k\quad\left(\mathrm{mod}\ p^e\right)\]
+        ここで重要なのが、\(g_k(u)\) は \(2k\) 次以下の多項式であるということである。
+        \(g_0(u)\) は \(0\) 次式なので正しく、\(g_{k-1}(u)\) が \(2k-2\) 次の多項式であると仮定すると \(g_{k-1}(u-1)\) が \(2k-2\) 次式、\((u-1)^1\) が \(1\) 次式、\(u-1\) 項の総和計算なので結局 \(2k\) 次式(以下)となり、帰納法で示される(\(a_k\) の性質を考慮すると \(e-1+[(p-1)/(e-1)]\) 次まで落ちるかもしれないようです)。
+        よって \(f\) は \(2e-2\) 次式以下なので、\(f(0),\ f(1),\ \cdots,\ f(2e-2)\) を求めておけば
+        \[f(u)=\sum_{i=0}^{2e-2}f(i)\prod_{j\neq i}\frac{u-j}{i-j}=\sum_{i=0}^{2e-2}f(i)\frac{\prod_{j=0}^{i-1}(u-j)\cdot\prod_{j=i+1}^{2e-2}(u-j)}{(-1)^ii!(2e-2-i)!}\]
+        上式の多項式補間で \(f(u)\) を復元できる。除算は \(O\left(e\log p\right)\) かかるが、分母が \(u\) に依存しないので前計算(例えば \(\frac{1}{(-1)^ii!(2e-2-i)!}=\frac{(-1)^i\prod_{j=i+1}^{2e-2}j\cdot\prod_{j=2e-1-i}^{2e-2}j}{((2e-2)!)^2}\) を利用して除算の回数を1回に減らして \(O\left(e\log p\right)\)　\(f(i)\) の前計算は定義通りにやって \(O\left(e\mathrm{min}(p,e)\right)\))を行っておくことで \(O\left(e\right)\) で復元できる。<br>
+        　多項式補間で分子より分母の方が素因数 \(p\) を多く持つような項が存在するかどうかは重要である。この場合 \(\mathrm{mod}\ p^e\) を計算できない。
+        しかし、\([-i,2e-2-i]\) と \([u-2e+2,u]\) に含まれる \(p\) の倍数の数をそれぞれ \(\alpha,\beta\) とおくと、\(u-i\) が \(p\) の倍数の時は \(\alpha=\beta\)、そうでないとき \(\alpha-1\le\beta\) であり、\([-i,2e-2-i,\ i\neq 0]\) に含まれる素因数 \(p\) の個数は \(\alpha\) に対して最小である(\(0\) が \(p^1,p^2,p^3,\cdots\) の倍数であると考える) ことを考慮すると、分子の方が必ず分母より素因数 \(p\) を多く持つことが分かる。
+        よって全ての計算を \(ap^b\) の形で進めることで問題なく補間できる。<br>
+        　\(\frac{(x!)_p}{\genfrac[]{0pt}{}{p}{1}^u}\) を全て計算した後、最後に \(\genfrac[]{0pt}{}{p}{1}^{\sum u}\) を計算すると高速化できる。
+        第1種スターリング数は
+        \[\genfrac[]{0pt}{}{n}{k}=\genfrac[]{0pt}{}{n-1}{k-1}+(n-1)\genfrac[]{0pt}{}{n-1}{k}\]
+        という漸化式で必要な個数に対して線形時間で求めることができる。
+      </div>
+      <h2>計算量</h2><hr color="black">
+      <div class="text">
+        \(m\) の素因数分解: 愚直にやると \(O\left(\sqrt{m}\right)\)、ρ法を使うと \(O\left(m^{1/4}\log m\right)\)<br>
+        \(_n\mathrm{C}_r\ \mathrm{mod}\ p\) : \(O\left(\sqrt p\log p\right)\cdot O\left(\log_pn\right)=O\left(\sqrt p\log n\right)\)<br>
+        \(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) : \(O\left(kpe+ke\frac{\log n}{\log p}\right)\)<br>
+        　\(p^e\) 毎の前計算: \(O\left(pe\right)\)<br>
+        　　第1種スターリング数の列挙: \(O\left(p\mathrm{min}(p,e)\right)\)<br>
+        　　多項式補間の前計算: \(O\left(e\mathrm{min}(p,e)+e\log p\right)\)<br>
+        　全ての \(\frac{(x!)_p}{\genfrac[]{0pt}{}{p}{1}^u}\) の計算: \(O\left(e\frac{\log n}{\log p}\right)\)<br>
+        　　多項式補間: \(O\left(e\right)\)<br>
+        　　\(\sum_{k=0}^{e-1}(up)^k\genfrac[]{0pt}{}{v+1}{k+1}\) : \(O\left(e\right)\)<br>
+        　\(\genfrac[]{0pt}{}{p}{1}^{\sum u}\) : \(O\left(e\log n\right)\)<br>
+        CRT: \(O\left(ke\log p\right)\) (\(k\) は \(m\) が持つ素因数の種類)
+      </div>
+      <h2>実装</h2><hr color="black">
+      <div class="text">
+        \(p^e\) が小さい場合にFFTを使わない前処理 \(O(p^e)\) +クエリ \(O(1)\) で解くために、\(_n\mathrm{C}_r\ \mathrm{mod}\ p\) は階乗及びその逆元のテーブルを作成する方法、\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) は \(x\le p^e\) なる \((x!)_p\) を全列挙する方法を適宜取り入れている。
       </div>
       <h2>参考文献</h2><hr color="black">
       <div class="text">
