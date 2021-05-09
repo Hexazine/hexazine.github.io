@@ -76,9 +76,7 @@
         がいえる(\(n=up^e+v\ \left(u=\left[\frac{n}{p^e}\right],\ v=n\ \mathrm{mod}\ p^e=N_0\right)\) とおいたときの「\(1\) 以上 \(up^e\) 未満の積」と「\(up^e\) 以上 \(n\) 以下の積」を別々に計算するイメージ)。
         この式の \(\mathrm{mod}\ p^e\) を求めると、式中に現れる \(p^e\) の項が全て消えるので
         \[(n!)_p\equiv\left(\prod_{1\le j\lt p^e,\ p\ \nmid\ j}j\right)^\left[\frac{n}{p^e}\right]\left(\prod_{1\le j\le N_0,\ p\ \nmid\ j}j\right)=\left(\left(p^e!\right)_p\right)^\left[\frac{n}{p^e}\right]\left(N_0!\right)_p\quad(\mathrm{mod}\ p^e)\]
-        となる。<br>
-        　ところで、式中の \(\left(p^e!\right)_p\) が簡略化できそうである。
-        全ての \(p^e-1\) 以下で \(p\) の倍数でない非負整数 \(m\) は \(p^e\) を法とした逆元をもち、\(m^2\equiv 1\) でない限りその逆元は \(p^e-1\) 以下の \(m\) ではない唯一の非負整数なので、\(\left(p^e!\right)_p\) は「\(m\le p^e-1, m^2\equiv 1\) なる非負整数 \(m\) の総積」と合同であるとわかる。
+        そして、全ての \(p^e-1\) 以下で \(p\) の倍数でない非負整数 \(m\) は \(p^e\) を法とした逆元をもち、\(m^2\equiv 1\) でない限りその逆元は \(p^e-1\) 以下の \(m\) ではない唯一の非負整数なので、\(\left(p^e!\right)_p\) は「\(m\le p^e-1, m^2\equiv 1\) なる非負整数 \(m\) の総積」と合同であるとわかる。
         この \(m\) を全て求めたい。\(m^2\equiv 1\ \left(\mathrm{mod}\ p^e\right)\) ならば自明に \(m^2\equiv 1\ (\mathrm{mod}\ p)\) であり、式変形すると \((m+1)(m-1)\equiv 0\ (\mathrm{mod}\ p)\) となるので、\(m=pm'\pm 1\) とおいてよい。
         \(m=pm'+1\) のとき、
         \[m^2=p^2m'^2+2pm'+1\equiv 1\Leftrightarrow pm'(pm'+2)\equiv 0\quad(\mathrm{mod}\ p^e)\]
@@ -88,7 +86,7 @@
         前者では \(m\equiv 2^{e-1}+1\ (\mathrm{mod}\ 2^e)\) で、条件を満たす \(m\) は \(1,\ 2^{e-1}+1\) であり、後者では \(m'\equiv 2^{e-2}-1\ (\mathrm{mod}\ 2^{e-1})\)、\(m\equiv 2^{e-1}-1\ (\mathrm{mod}\ 2^e)\) で、条件を満たす \(m\) は \(2^{e-1}-1,\ 2^e-1\) と示される。<br>
         　\(m=pm'-1\) の場合も同様に計算し、示された \(m\) を重複に注意してまとめると、
         \[m=\begin{cases}1,\ p^e-1&(p\neq 2)\\1&(p=2,\ e=1)\\1,\ 3&(p=2,\ e=2)\\1,\ 2^{e-1}-1,\ 2^{e-1}+1,\ 2^e-1&(p=2,\ e\ge 3)\end{cases}\]
-        となる。それぞれについて \(m\) の総積を求めると、
+        それぞれについて \(m\) の総積を求めると、
         \[\prod m\equiv\left(p^e!\right)_p\equiv\begin{cases}1&(p=2,\ e\ge 3)\\-1&(otherwise)\end{cases}\ (\mathrm{mod}\ p^e)\]
         よって、
         \[(n!)_p\equiv\delta^\left[\frac{n}{p^e}\right]\left(N_0!\right)_p\quad(\mathrm{mod}\ p^e),\quad\delta=\begin{cases}1&(p=2,\ e\ge 3)\\-1&(otherwise)\end{cases}\]
@@ -96,9 +94,9 @@
         \[\frac{\left[\frac{n}{p^i}\right]!}{p^{\left[\frac{n}{p^i+1}\right]!}\left[\frac{n}{p^i+1}\right]!}\equiv\delta^{\left[\frac{n}{p^{i+e}}\right]}(N_i!)_p\quad(\mathrm{mod}\ p^e)\]
         \((x!)_p\) と \(N_i\) の定義を当てはめただけ。\(\left[\frac{n}{p^{d+1}}\right]=0\) に注意して \(0\le i\le d\) の総積をとると、
         \[\frac{n!}{p^{\sum_{i=1}^d\left[\frac{n}{p^i}\right]}}\equiv\delta^{\sum_{i=e}^d\left[\frac{n}{p^i}\right]}\prod_{i=0}^d(N_i!)_p\quad(\mathrm{mod}\ p^e)\]
-        この式は \(n!\) を \(p\) で割れるだけ割ったものを与えている。\(r,\ n-r\) についても同様なので、
-        \[\frac{_n\mathrm{C}_r}{p^{k_1}}\equiv\delta^{k_e}\prod_{i=0}^{d}\frac{\left(N_i!\right)_p}{\left(R!\right)_p\left(\left(N-R\right)_i!\right)_p}\quad(\mathrm{mod}\ p^e),\quad k_i=\sum_{j=i}^{d}\left(\left[\frac{n}{p^j}\right]-\left[\frac{r}{p^j}\right]-\left[\frac{n-r}{p^j}\right]\right)\]
-        \(k_i\) は \(O\left(\log n\right)\) で愚直に求まるので、\((x!)_p\ \mathrm{mod}\ p^e\) が高速に求まればよい。
+        この式は目的の \(n!\) を \(p\) で割れるだけ割ったものに関する式である。\(r,\ n-r\) についても同様なので、
+        \[\frac{_n\mathrm{C}_r}{p^{\varepsilon_1}}\equiv\delta^{\varepsilon_e}\prod_{i=0}^{d}\frac{\left(N_i!\right)_p}{\left(R!\right)_p\left(\left(N-R\right)_i!\right)_p}\quad(\mathrm{mod}\ p^e),\quad \varepsilon_i=\sum_{j=i}^{d}\left(\left[\frac{n}{p^j}\right]-\left[\frac{r}{p^j}\right]-\left[\frac{n-r}{p^j}\right]\right)\]
+        \(\varepsilon_i\) は \(O\left(\log n\right)\) で愚直に求まるので、\(x\lt p^e\) なる \((x!)_p\ \mathrm{mod}\ p^e\) が高速に求まればよい。
       </div>
       <h2>\((x!)_p\ \mathrm{mod}\ p^e\) を高速に求める</h2><hr color="black">
       <div class="text">
@@ -132,7 +130,8 @@
       <div class="text">
         \(m\) の素因数分解: 愚直にやると \(O\left(\sqrt{m}\right)\)、ρ法を使うと \(O\left(m^{1/4}\log m\right)\)<br>
         \(_n\mathrm{C}_r\ \mathrm{mod}\ p\) : \(O\left(\sqrt p\log p\right)\cdot O\left(\log_pn\right)=O\left(\sqrt p\log n\right)\)<br>
-        \(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) : \(O\left(kpe+ke\frac{\log n}{\log p}\right)\)<br>
+        \(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) : \(O\left(kpe+ke\frac{\log n}{\log p}\right)\) (\(k\) は \(m\) が持つ素因数の種類)<br>
+        　\(\varepsilon_i\) : \(O\left(\log n\right)\)<br>
         　\(p^e\) 毎の前計算: \(O\left(pe\right)\)<br>
         　　第1種スターリング数の列挙: \(O\left(p\mathrm{min}(p,e)\right)\)<br>
         　　多項式補間の前計算: \(O\left(e\mathrm{min}(p,e)+e\log p\right)\)<br>
@@ -140,11 +139,16 @@
         　　多項式補間: \(O\left(e\right)\)<br>
         　　\(\sum_{k=0}^{e-1}(up)^k\genfrac[]{0pt}{}{v+1}{k+1}\) : \(O\left(e\right)\)<br>
         　\(\genfrac[]{0pt}{}{p}{1}^{\sum u}\) : \(O\left(e\log n\right)\)<br>
-        CRT: \(O\left(ke\log p\right)\) (\(k\) は \(m\) が持つ素因数の種類)
+        CRT: \(O\left(ke\log p\right)\)
+      </div>
+      <h2>まとめ</h2><hr color="black">
+      <div class="text">
+        \(_n\mathrm{C}_r\ \mathrm{mod}\ m\)、見た目の単純さに反して実装が鬼
       </div>
       <h2>実装</h2><hr color="black">
       <div class="text">
-        \(p^e\) が小さい場合にFFTを使わない前処理 \(O(p^e)\) +クエリ \(O(1)\) で解くために、\(_n\mathrm{C}_r\ \mathrm{mod}\ p\) は階乗及びその逆元のテーブルを作成する方法、\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) は \(x\le p^e\) なる \((x!)_p\) を全列挙する方法を適宜取り入れている。
+        \(p^e\) が小さい場合にFFTを使わない前処理 \(O(p^e)\) +クエリ \(O(1)\) で解くために、\(_n\mathrm{C}_r\ \mathrm{mod}\ p\) は階乗及びその逆元のテーブルを作成する方法、\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) は \(x\le p^e\) なる \((x!)_p\) を全列挙する方法を適宜取り入れている。<br>
+        使用するアルゴリズム:rho method, Factorial, CRT
       </div>
       <h2>参考文献</h2><hr color="black">
       <div class="text">
