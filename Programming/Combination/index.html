@@ -16,6 +16,17 @@
 
     <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
     <script type="text/javascript" src="../../js/footerFixed.js"></script>
+    <!--<link rel="stylesheet" href="../../js/highlight/styles/vs.css">
+    <script src="../../js/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>-->
+    <link type="text/css" rel="stylesheet" href="../../js/syntaxhighlighter/syntaxhighlighter2/styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="../../js/syntaxhighlighter/syntaxhighlighter2/styles/shThemeMidnight.css"/>
+    <script type="text/javascript" src="../../js/syntaxhighlighter/syntaxhighlighter2/scripts/shCore.js"></script>
+    <script type="text/javascript" src="../../js/syntaxhighlighter/syntaxhighlighter2/scripts/shBrushCpp.js"></script>
+    <script type="text/javascript">
+      SyntaxHighlighter.config.clipboardSwf='../../js/syntaxhighlighter/syntaxhighlighter2/scripts/clipboard.swf';
+      SyntaxHighlighter.all();
+    </script>
   </head>
   <body link="1a0dab" vlink="882c99" alink="882c99">
     <div class="title">
@@ -110,7 +121,7 @@
         \[((up+v)!)_p\equiv\genfrac[]{0pt}{}{p}{1}^u\left(\prod_{i=0}^{u-1}\left(1+\sum_{k=1}^{e-1}\frac{\genfrac[]{0pt}{}{p}{k+1}}{\genfrac[]{0pt}{}{p}{1}}(ip)^k\right)\right)\cdot\left(\sum_{k=0}^{e-1}(up)^k\genfrac[]{0pt}{}{v+1}{k+1}\right)\quad\left(\mathrm{mod}\ p^e\right)\]
         ここで、
         \[a_k=\frac{\genfrac[]{0pt}{}{p}{k+1}}{\genfrac[]{0pt}{}{p}{1}}\ \mathrm{mod}\ p^e,\quad f(u)=\prod_{i=0}^{u-1}\left(1+\sum_{k=1}^{e-1}a_k(ip)^k\right)\]
-        \[g_0(u)=1,\quad g_k(u)=\sum_{j=1}^k\left(\sum_{i=0}^{u-1}s_{k-j}(i)\cdot i^j\right)a_j\]
+        \[g_0(u)=1,\quad g_k(u)=\sum_{j=1}^k\left(\sum_{i=0}^{u-1}g_{k-j}(i)\cdot i^j\right)a_j\]
         とおくと、\(f\) を展開して整理することで、
         \[f(u)\equiv \sum_{k=0}^{e-1}g_k(u)p^k\quad\left(\mathrm{mod}\ p^e\right)\]
         ここで重要なのが、\(g_k(u)\) は \(2k\) 次以下の多項式であるということである。
@@ -151,6 +162,195 @@
       <div class="text">
         \(p^e\) が小さい場合に前処理 \(O(p^e)\) +クエリ \(O(\log n)\) で解くために、\(_n\mathrm{C}_r\ \mathrm{mod}\ p\) は階乗及びその逆元のテーブルを作成する方法、\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) は \(x\le p^e\) なる \((x!)_p\) を全列挙する方法を適宜取り入れている。<br>
         使用するアルゴリズム:rho method, Factorial, CRT
+        <pre class="brush: cpp;">
+struct com_sn_pm{ //n&lt;=10^5,mは素数
+  const int m;
+  VL fac,inv,finv; //階乗、逆元、階乗の逆元
+  com_sn_pm(int mod):m(mod){
+    fac.resize(m),inv.resize(m),finv.resize(m);
+    fac[0]=fac[1]=inv[1]=finv[0]=finv[1]=1;
+    rep(i,2,m)fac[i]=fac[i-1]*i%m,inv[i]=m-inv[m%i]*(m/i)%m,finv[i]=finv[i-1]*inv[i]%m;
+  }
+  LL operator()(LL n,LL r)const{
+    if(n&lt;r||n&lt;0||r&lt;0)return 0;
+    LL ret=1;
+    int nm,rm;
+    while(n||r){ //Lucasの定理
+      nm=n%m,rm=r%m;
+      if(nm&lt;rm)return 0;
+      ret=ret*fac[nm]%m*finv[rm]%m*finv[nm-rm]%m;
+      n/=m,r/=m;
+    }
+    return ret;
+  }
+};
+
+LL com_pm(LL n,LL r,const int m){ //n>10e5,mは素数
+  if(n&lt;r||n&lt;0||r&lt;0)return 0;
+  LL ret=1;
+  int nm,rm;
+  while(n||r){ //Lucasの定理
+    nm=n%m,rm=r%m;
+    if(nm&lt;rm)return 0;
+    FAC N(nm,m),R(rm,m),NR(nm-rm,m);
+    ret=ret*DIV(DIV(N.fac,R.fac,m),NR.fac,m)%m; //DIV(a,b,m):= a/b mod m
+    n/=m,r/=m;
+  }
+  return ret;
+}
+
+struct com_powm{ //m=p^e,pe&lt;10^5
+  bool mode; //全列挙 or 工夫計算
+  const int p,e,m,deg,M=10e5; //deg: 多項式の次数(2e-2) M:全列挙する最大のm
+  VVL s1; //第1種スターリング数
+  VL cfac,cfinv,y,ip,ipe,pows;
+  /*cfac: p^e未満のxについて(x!)_p cinv: cfinv^-1
+  y: f(0),f(1),...,f(deg) ip: 多項式補間の分母 ipe: ipがもつ素因数pの個数
+  pows: 1,p,p^2,...,p^(e-1)*/
+  inline constexpr int power(int p,int e)const{ //p^e
+    int ret=1;
+    for(;e;e&gt;&gt;=1,p*=p)if(e&1)ret*=p;
+    return ret;
+  }
+  inline constexpr LL modpow(LL a,LL b)const{ //a^b mod m
+    if(b&lt;0)return modpow(modinv(a),-b);
+    LL ret=1;
+    for(;b;b&gt;&gt;=1,a=a*a%m)if(b&1)ret*=a;
+    return ret;
+  }
+  inline constexpr LL modinv(LL a)const{ //a^-1 mod m
+    LL ret=modpow(a,p-2);
+    for(int i=1;i&lt;e;i&lt;&lt;=1)ret=ret*(2+m-ret*a%m)%m;
+    return ret;
+  }
+  inline LL interpolation(int u)const{ //多項式補間
+    if(u&lt;=deg)return y[u]; //uがdeg以下なら計算済
+    VL fac(deg+1),fe(deg+1),facr(deg+1),fre(deg+1);
+    /*fac: prod(j=0,i=1)(u-j) fe: facの素因数pの個数
+    facr: prod(j=i+1,deg)(u-j) fre: facrの素因数pの個数*/
+    fac[0]=facr[deg]=1;
+    rep(deg){
+      fac[i+1]=u-i,facr[deg-1-i]=u-deg+i;
+      while(fac[i+1]%p==0)fac[i+1]/=p,++fe[i+1];
+      while(facr[deg-1-i]%p==0)facr[deg-1-i]/=p,++fre[deg-1-i];
+      fac[i+1]=fac[i+1]*fac[i]%m,facr[deg-1-i]=facr[deg-1-i]*facr[deg-i]%m;
+      fe[i+1]+=fe[i],fre[deg-1-i]+=fre[deg-i];
+    }
+    LL ret=0;
+    rep(deg+1)ret+=y[i]*fac[i]%m*facr[i]%m*ip[i]%m*(fe[i]+fre[i]-ipe[i]&lt;e?pows[fe[i]+fre[i]-ipe[i]]:0)%m; //多項式補間
+    ret%=m;
+    return ret;
+  }
+  inline LL cfact(int n)const{ //(n!)_p/[p,1]^u
+    int u=n/p,v=n%p;
+    LL ret=0,k=1;
+    rep(min(v+1,e))ret+=k*s1[v+1][i+1]%m,k=k*u%m*p%m;
+    ret%=m;
+    ret=ret*interpolation(u)%m;
+    return ret;
+  }
+  com_powm(int P,int E):p(P),e(E),m(power(P,E)),deg((E&lt;&lt;1)-2){
+    mode=(m&lt;=M);
+    if(mode){
+      cfac.resize(m),cfinv.resize(m);
+      cfac[0]=cfac[1]=1;
+      rep(i,2,m)cfac[i]=(i%p?cfac[i-1]*i%m:cfac[i-1]);
+      cfinv[m-1]=modinv(cfac[m-1]);
+      repr(m-1)cfinv[i]=((i+1)%p?cfinv[i+1]*(i+1)%m:cfinv[i+1]);
+    }else{
+      s1=StirlingF(p,min(p,e),m);
+      pows.resize(e);
+      pows[0]=1;
+      rep(i,e-1)pows[i+1]=pows[i]*p;
+      y.resize(deg+1,1),ip.resize(deg+1,1),ipe.resize(deg+1);
+      LL inv=modinv(s1[p][1]),k;
+      rep(i,1,deg){ //定義通りf(0),f(1),...,f(deg)を計算
+        k=i*p;
+        rep(j,1,min(p,e))y[i+1]+=s1[p][j+1]*inv%m*k%m,k=k*i*p%m;
+        y[i+1]%=m;
+        y[i+1]=y[i+1]*y[i]%m;
+      }
+      int fe=0; //facの素因数pの個数
+      LL fac=1; //今見ている場所までの総積
+      repr(deg){
+        k=i+1;
+        while(k%p==0)k/=p,++fe;
+        fac=fac*k%m;
+        ip[i]=ip[i]*fac%m;
+        ip[deg-i]=ip[deg-i]*fac%m;
+        ipe[i]=ipe[i]-fe;
+        ipe[deg-i]=ipe[deg-i]-fe;
+      }
+      inv=modinv(fac);
+      inv=inv*inv%m,fe&lt;&lt;=1; //((2e-2)!)^2
+      rep(deg+1){
+        ip[i]=ip[i]*inv%m;
+        if(i&1)ip[i]=m-ip[i];
+        ipe[i]+=fe;
+      }
+    }
+  }
+  LL operator()(LL n,LL r)const{
+    if(n&lt;r||n&lt;0||r&lt;0)return 0;
+    LL ret=1,nr=n-r;
+    int e1=0,ee=0,k=0;
+    if(mode)while(n){
+      ret=ret*cfac[n%m]%m*cfinv[r%m]%m*cfinv[nr%m]%m;
+      if(k)e1+=n-r-nr;
+      if(++k&gt;e)ee+=n-r-nr;
+      n/=p,r/=p,nr/=p;
+    }else{
+      LL su=0,inv=1;
+      while(n){
+        int N=n%m,R=r%m,NR=nr%m;
+        su+=N/p-R/p-NR/p;
+        ret=ret*cfact(N)%m;
+        inv=inv*cfact(R)%m*cfact(NR)%m;
+        if(k)e1+=n-r-nr;
+        if(++k&gt;e)ee+=n-r-nr;
+        n/=p,r/=p,nr/=p;
+      }
+      ret=ret*modpow(s1[p][1],su)%m*modinv(inv)%m; //分母と[p,1]^uは最後にまとめて
+    }
+    if(ret&&!(p==2&&e&gt;=3)&&ee&1)ret=m-ret;
+    ret=ret*(e1&lt;e?power(p,e1):0)%m;
+    return ret;
+  }
+};
+
+struct COM{
+  const int m,M=10e5; //M: 全列挙で計算する最大のm
+  VL bp; //m=p,p&gt;M
+  VE&lt;com_sn_pm&gt; vp; //m=p,p&lt;=M
+  VE&lt;com_powm&gt; vc; //m=p^e
+  COM(int mod):m(mod){
+    if(m&lt;=1)return;
+    prfcf P; //ロー法
+    VP v=P.getp(m); //v: mの素因数{p,e}のペア
+    for(PA p:v){
+      if(p.SE>=2)vc.PB(com_powm(p.FI,p.SE));
+      else if(p.FI&lt;=M)vp.PB(com_sn_pm(p.FI));
+      else bp.PB(p.FI);
+    }
+  }
+  LL operator()(LL n,LL r)const{
+    if(m&lt;=1)return 0;
+    VP v; //{m,nCr mod m}のペア
+    for(auto &a:bp)v.PB({a,com_pm(n,r,a)});
+    for(auto &a:vp)v.PB({a.m,a(n,r)});
+    for(auto &a:vc)v.PB({a.m,a(n,r)});
+    return CRT(v); //中国剰余定理で復元
+  }
+};
+
+int main(){
+  LL n,r;
+  int m;
+  cin&gt;&gt;n&gt;&gt;r&gt;&gt;m;
+  COM c(m);
+  cout&lt;&lt;c(n,r)&lt;&lt;endl;
+}
+        </pre>
       </div>
       <h2>参考文献</h2><hr color="black">
       <div class="text">
