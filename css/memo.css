@@ -2,6 +2,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+}
+.syntaxhighlighter table{
+  max-width: none;
 }
 body{
   font-family: Arial;
