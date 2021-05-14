@@ -34,8 +34,8 @@
       <h1>αmus memo</h1>
     </div>
     <div class="date">
-      <p>作成日: 2021/05/02(日)</p>
-      <p>最終更新日: 2021/05/02(日)</p>
+      <p>作成日: 2021/05/14(金)</p>
+      <p>最終更新日: 2021/05/14(金)</p>
     </div>
     <div class="main">
       <h1>任意mod二項係数</h1>
@@ -53,8 +53,7 @@
         \[n,r,m\ が与えられます。\ _n\mathrm{C}_r\ \mathrm{mod}\ m\ を計算して下さい。\]
         この問題の制約をどのくらい厳しくできるのかを今から丁度1年前、自粛期間中に考えていたが、最強の制約(大方全ての二項係数を計算するという制約)である
         \[0\leq n,r\leq 10^{18},\ 2\leq m\leq 2\times 10^9\]
-        で解く方法を思いついたのでメモしておく。<br>
-        　...流石に多分既出 でもまあ日本語サイトは見つからなかったから...
+        で解く方法を思いついた(どうせ既出)のでメモしておく。<br>
       </div>
       <h2>方針</h2><hr color="black">
       <div class="text">
@@ -84,8 +83,7 @@
         \([\ ]\) はガウス記号。(例えば \(n\) が \(p\) 進数表示で \(6543210\)、\(e\) が \(3\) であった場合、\(n_2=2,\ N_2=432\) である。)<br>
         　まず \((n!)_p\) について、
         \[(n!)_p=\left(\prod_{i=0}^{\left[n/p^e\right]-1}\prod_{1\le j\lt p^e,\ p\ \nmid\ j}\left(ip^e+j\right)\right)\left(\prod_{1\le j\le N_0,\ p\ \nmid\ j}\left(\left[\frac{n}{p^e}\right]p^e+j\right)\right)\]
-        がいえる(\(n=up^e+v\ \left(u=\left[\frac{n}{p^e}\right],\ v=n\ \mathrm{mod}\ p^e=N_0\right)\) とおいたときの「\(1\) 以上 \(up^e\) 未満の積」と「\(up^e\) 以上 \(n\) 以下の積」を別々に計算するイメージ)。
-        この式の \(\mathrm{mod}\ p^e\) を求めると、式中に現れる \(p^e\) の項が全て消えるので
+        がいえる<font color=#444>\(^{\ast 1}\)</font>。この式の \(\mathrm{mod}\ p^e\) を求めると、式中に現れる \(p^e\) の項が全て消えるので
         \[(n!)_p\equiv\left(\prod_{1\le j\lt p^e,\ p\ \nmid\ j}j\right)^\left[\frac{n}{p^e}\right]\left(\prod_{1\le j\le N_0,\ p\ \nmid\ j}j\right)=\left(\left(p^e!\right)_p\right)^\left[\frac{n}{p^e}\right]\left(N_0!\right)_p\quad(\mathrm{mod}\ p^e)\]
         そして、全ての \(p^e-1\) 以下で \(p\) の倍数でない非負整数 \(m\) は \(p^e\) を法とした逆元をもち、\(m^2\equiv 1\) でない限りその逆元は \(p^e-1\) 以下の \(m\) ではない唯一の非負整数なので、\(\left(p^e!\right)_p\) は「\(m\le p^e-1, m^2\equiv 1\) なる非負整数 \(m\) の総積」と合同であるとわかる。
         この \(m\) を全て求めたい。\(m^2\equiv 1\ \left(\mathrm{mod}\ p^e\right)\) ならば自明に \(m^2\equiv 1\ (\mathrm{mod}\ p)\) であり、式変形すると \((m+1)(m-1)\equiv 0\ (\mathrm{mod}\ p)\) となるので、\(m=pm'\pm 1\) とおいてよい。
@@ -124,16 +122,13 @@
         \[g_0(u)=1,\quad g_k(u)=\sum_{j=1}^k\left(\sum_{i=0}^{u-1}g_{k-j}(i)\cdot i^j\right)a_j\]
         とおくと、\(f\) を展開して整理することで、
         \[f(u)\equiv \sum_{k=0}^{e-1}g_k(u)p^k\quad\left(\mathrm{mod}\ p^e\right)\]
-        ここで重要なのが、\(g_k(u)\) は \(2k\) 次以下の多項式であるということである。
-        \(g_0(u)\) は \(0\) 次式なので正しく、\(g_{k-1}(u)\) が \(2k-2\) 次の多項式であると仮定すると \(g_{k-1}(u-1)\) が \(2k-2\) 次式、\((u-1)^1\) が \(1\) 次式、\(u-1\) 項の総和計算なので結局 \(2k\) 次式(以下)となり、帰納法で示される(\(a_k\) の性質を考慮すると \(e-1+[(p-1)/(e-1)]\) 次まで落ちるかもしれないようです)。
+        ここで重要なのが、\(g_k(u)\) は \(2k\) 次以下の多項式であるということである<font color=#444>\(^{\ast 2}\)</font>。
         よって \(f\) は \(2e-2\) 次式以下なので、\(f(0),\ f(1),\ \cdots,\ f(2e-2)\) を求めておけば
         \[f(u)=\sum_{i=0}^{2e-2}f(i)\prod_{j\neq i}\frac{u-j}{i-j}=\sum_{i=0}^{2e-2}f(i)\frac{\prod_{j=0}^{i-1}(u-j)\cdot\prod_{j=i+1}^{2e-2}(u-j)}{(-1)^ii!(2e-2-i)!}\]
-        上式の多項式補間で \(f(u)\) を復元できる。除算は \(O\left(e\log p\right)\) かかるが、分母が \(u\) に依存しないので前計算(例えば \(\frac{1}{(-1)^ii!(2e-2-i)!}=\frac{(-1)^i\prod_{j=i+1}^{2e-2}j\cdot\prod_{j=2e-1-i}^{2e-2}j}{((2e-2)!)^2}\) を利用して除算の回数を1回に減らして \(O\left(e\log p\right)\)　\(f(i)\) の前計算は定義通りにやって \(O\left(e\mathrm{min}(p,e)\right)\))を行っておくことで \(O\left(e\right)\) で復元できる。<br>
-        　多項式補間で分子より分母の方が素因数 \(p\) を多く持つような項が存在するかどうかは重要である。この場合 \(\mathrm{mod}\ p^e\) を計算できない。
-        しかし、\(\genfrac[]{0pt}{}{p}{1}=(p-1)!\ \nmid\ p\) より \(f(i)\) は \(\prod(1+\frac{a}{b}p),\ a,b \nmid p\) の形で表されるので \(p\) の倍数でも整数を \(p\) で割った値でもなく、
-        \([-i,2e-2-i]\) と \([u-2e+2,u]\) に含まれる \(p\) の倍数の数をそれぞれ \(\alpha,\beta\) とおくと、\(u-i\) が \(p\) の倍数の時は \(\alpha=\beta\)、そうでないとき \(\alpha-1\le\beta\) であり、\([-i,2e-2-i,\ i\neq 0]\) に含まれる素因数 \(p\) の個数は \(\alpha\) に対して最小である(\(0\) が \(p^1,p^2,p^3,\cdots\) の倍数であると考える) ことを考慮すると、分子の方が必ず分母より素因数 \(p\) を多く持つことが分かる。
-        よって全ての計算を \(ap^b\) の形で進めることで問題なく補間できる。<br>
-        　\(\frac{(x!)_p}{\genfrac[]{0pt}{}{p}{1}^u}\) を全て計算した後、最後に \(\genfrac[]{0pt}{}{p}{1}^{\sum u}\) を計算すると高速化できる(毎回 \(\genfrac[]{0pt}{}{p}{1}^u\) を計算すると \(O(e\log n)\) だが、まとめて計算すると \(\sum u\) が小さくなってほぼ定数時間になる)。
+        上式の多項式補間で \(f(u)\) を復元できる。除算は \(O\left(e\log p\right)\) かかるが、分母が \(u\) に依存しないので前計算<font color=#444>\(^{\ast 3}\)</font>を行っておくことで \(O\left(e\right)\) で復元できる。<br>
+        　多項式補間で分子より分母の方が素因数 \(p\) を多く持つような項が存在するかどうかは重要である。
+        この場合 \(\mathrm{mod}\ p^e\) を計算できないが、実はそのようなケースは存在しない<font color=#444>\(^{\ast 4}\)</font>ので全ての計算を \(ap^b\) の形で進めることで問題なく補間できる。<br>
+        　\(\frac{(x!)_p}{\genfrac[]{0pt}{}{p}{1}^u}\) を全て計算した後、最後に \(\genfrac[]{0pt}{}{p}{1}^{\sum u}\) を計算すると高速化できる(毎回 \(\genfrac[]{0pt}{}{p}{1}^u\) を計算すると \(O(e\log n)\) だが、まとめて計算すると \(\sum u\) が小さくなってほぼ定数時間<font color=#444>\(^{\ast 5}\)</font>になる)。
         第1種スターリング数は
         \[\genfrac[]{0pt}{}{n}{k}=\genfrac[]{0pt}{}{n-1}{k-1}+(n-1)\genfrac[]{0pt}{}{n-1}{k}\]
         という漸化式で必要な個数に対して線形時間で求めることができる。
@@ -161,7 +156,7 @@
       <h2>実装</h2><hr color="black">
       <div class="text">
         \(p^e\) が小さい場合に前処理 \(O(p^e)\) +クエリ \(O(e\frac{\log n}{\log p})\) でさらに高速に解くために、\(_n\mathrm{C}_r\ \mathrm{mod}\ p\) は階乗及びその逆元のテーブルを作成する方法、\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) は \(x\le p^e\) なる \((x!)_p\) を全列挙する方法を適宜取り入れている。<br>
-        使用するアルゴリズム: rho method, Factorial, CRT
+        使用するアルゴリズム: rho method, Factorial, CRT　<a href="../macro">マクロ</a>
         <pre class="brush: cpp;">
 struct com_sn_pm{ //n&lt;=10^5,mは素数
   const int m;
@@ -215,7 +210,7 @@ struct com_powm{ //m=p^e,pe&lt;10^5
   inline constexpr LL modpow(LL a,LL b)const{ //a^b mod m
     if(b&lt;0)return modpow(modinv(a),-b);
     LL ret=1;
-    for(;b;b&gt;&gt;=1,a=a*a%m)if(b&1)ret*=a;
+    for(;b;b&gt;&gt;=1,a=a*a%m)if(b&1)ret=ret*a%m;
     return ret;
   }
   inline constexpr LL modinv(LL a)const{ //a^-1 mod m
@@ -352,32 +347,34 @@ int main(){
 }
         </pre>
         <br>
-        実行時間は以下のようであった。(実行環境はAtCoderのコードテスト)<br>
+        以下は \(_{10^{18}}\mathrm{C}_{5\times 10^{17}}\) の実行時間(AtCoderのコードテスト)。<br>
+        \(m=1\rightarrow 0:\ 7\mathrm{ms}\)<br>
+        \(m=1999999973\rightarrow 27337870:\ 899\mathrm{ms}\)<br>
+        \(m=1930238310=2\times 3\times 5\times 7\times 11\times 13\times 17\times 19\times 199\rightarrow 0:\ 31\mathrm{ms}\)<br>
+        \(m=1977326743=7^{11}\rightarrow 703305722:\ 33\mathrm{ms}\)<br>
+        \(m=1999999992=2^3\times 3\times 83333333\rightarrow 425852352:\ 24\mathrm{ms}\)<br>
         <br>
-        ・1 mod<br>
-        \(n=1000000000000000000,\ r=500000000000000000,\ m=1\rightarrow 0\mathrm{(verified)}:\ 7\mathrm{ms}\)<br>
-        <br>
-        ・素数mod<br>
-        \(n=200000001400000334,\ r=100000000700000256,\ m=1000000007\rightarrow 331858502:\ 183\mathrm{ms}\)<br>
-        \(n=996491788296388607,\ r=498245894148194303,\ m=998244353\rightarrow 499122177:\ 440\mathrm{ms}\)<br>
-        \(n=1000000000000000000,\ r=500000000000000000,\ m=1999999973\rightarrow 27337870:\ 899\mathrm{ms}\)<br>
-        \(n=662077814324533695,\ r=448895110005446502,\ m=13\rightarrow 7:\ 25\mathrm{ms}\)<br>
-        \(n=20000000,\ r=10000000,\ m=1000000007\rightarrow 486682686\mathrm{(verified)}:\ 72\mathrm{ms}\)<br>
-        <br>
-        ・素数積mod<br>
-        \(n=662077814324533695,\ r=448895110005446502,\ m=223092870\rightarrow 111546435:\ 29\mathrm{ms}\)<br>
-        \(n=964937842767429156,\ r=330845131511185192,\ m=393255863\rightarrow 1228333470:\ 33\mathrm{ms}\)<br>
-        \(n=1000000000000000000,\ r=500000000000000000,\ m=1930238310\rightarrow 0:\ 31\mathrm{ms}\)<br>
-        \(n=595454894999199873,\ r=43110208797520127,\ m=15\rightarrow 12:\ 26\mathrm{ms}\)<br>
-        \(n=469588,\ r=84917,\ m=223092870\rightarrow 209969760\mathrm{(verified)}:\ 31\mathrm{ms}\)<br>
-        <br>
-        ・素数冪mod<br>
+        以下は \(_{10^{7}}\mathrm{C}_{5\times 10^{6}}\) の実行時間。verified by WolframAlpha.<br>
+        \(m=1999999973\rightarrow 852782326:\ 64\mathrm{ms}\)<br>
+        \(m=1930238310\rightarrow 0:\ 31\mathrm{ms}\)<br>
+        \(m=1977326743\rightarrow 1814741656:\ 31\mathrm{ms}\)<br>
+        \(m=1999999992\rightarrow 250092192:\ 56\mathrm{ms}\)<br>
       </div>
       <h2>参考文献</h2><hr color="black">
       <div class="text">
         <a href="http://www.cecm.sfu.ca/organics/papers/granville/paper/binomial/html/binomial.html">Binomial Coefficients modulo prime powers - Andrew Granville</a><br>
         <a href="https://min-25.hatenablog.com/entry/2017/11/01/185400">二項係数 mod Prime Power - memo</a><br>
       </div>
+      <hr color="black">
+      <div class="text">
+        <ol class="notes">
+          <li>\(n=up^e+v\ \left(u=\left[\frac{n}{p^e}\right],\ v=n\ \mathrm{mod}\ p^e=N_0\right)\) とおいたときの「\(1\) 以上 \(up^e\) 未満の積」と「\(up^e\) 以上 \(n\) 以下の積」を別々に計算するイメージ</li>
+          <li>\(g_0(u)\) は \(0\) 次式なので正しく、\(g_{k-1}(u)\) が \(2k-2\) 次の多項式であると仮定すると \(g_{k-1}(u-1)\) が \(2k-2\) 次式、\((u-1)^1\) が \(1\) 次式、\(u-1\) 項の総和計算なので結局 \(2k\) 次式(以下)となり、帰納法で示される(\(a_k\) の性質を考慮すると \(e-1+[(p-1)/(e-1)]\) 次まで落ちるかもしれないようです)</li>
+          <li>例えば \(\frac{1}{(-1)^ii!(2e-2-i)!}=\frac{(-1)^i\prod_{j=i+1}^{2e-2}j\cdot\prod_{j=2e-1-i}^{2e-2}j}{((2e-2)!)^2}\) を利用して除算の回数を1回に減らして \(O\left(e\log p\right)\)　\(f(i)\) の前計算は定義通りにやって \(O\left(e\mathrm{min}(p,e)\right)\)</li>
+          <li>\(\genfrac[]{0pt}{}{p}{1}=(p-1)!\ \nmid\ p\) より \(f(i)\) は \(\prod(1+\frac{a}{b}p),\ a,b \nmid p\) の形で表されるので \(p\) の倍数でも整数を \(p\) で割った値でもなく、\([-i,2e-2-i]\) と \([u-2e+2,u]\) に含まれる \(p\) の倍数の数をそれぞれ \(\alpha,\beta\) とおくと、\(u-i\) が \(p\) の倍数の時は \(\alpha=\beta\)、そうでないとき \(\alpha-1\le\beta\) であり、\([-i,2e-2-i,\ i\neq 0]\) に含まれる素因数 \(p\) の個数は \(\alpha\) に対して最小である(\(0\) が \(p^1,p^2,p^3,\cdots\) の倍数であると考える) ことを考慮すると、分子の方が必ず分母より素因数 \(p\) を多く持つことが分かる</li>
+          <li>最悪計算量が \(O(\log\frac{\log n}{\log p}-e)\) とかになる</li>
+        </ol>
+      </div></div>
     </div>
     <footer id="footer">
       <div class="footer-left">

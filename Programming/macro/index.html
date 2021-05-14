@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      マクロ
+    </title>
+    <link rel="stylesheet" href="../../css/memo.css">
+    <link rel="stylesheet" href="../../css/memores.css">
+    <link rel="stylesheet" href="../../css/date.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+    <link rel="icon" href="../../images/amusement.ico">
+    <link rel="apple-touch-icon" sizes="3833x3833" href="../../images/amusement-high.jpg">
+
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <script type="text/javascript" src="../../js/footerFixed.js"></script>
+    <!--<link rel="stylesheet" href="../../js/highlight/styles/vs.css">
+    <script src="../../js/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>-->
+    <link type="text/css" rel="stylesheet" href="../../js/syntaxhighlighter/syntaxhighlighter3/styles/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="../../js/syntaxhighlighter/syntaxhighlighter3/styles/shThemeMidnight.css"/>
+    <script type="text/javascript" src="../../js/syntaxhighlighter/syntaxhighlighter3/scripts/shCore.js"></script>
+    <script type="text/javascript" src="../../js/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCpp.js"></script>
+    <script type="text/javascript">
+      SyntaxHighlighter.config.clipboardSwf='../../js/syntaxhighlighter/syntaxhighlighter3/scripts/clipboard.swf';
+      SyntaxHighlighter.all();
+    </script>
+  </head>
+  <body link="1a0dab" vlink="882c99" alink="882c99">
+    <div class="title">
+      <img src="../../images/rate.jpg" width="100">
+      <h1>αmus memo</h1>
+    </div>
+    <div class="date">
+      <p>作成日: 2021/05/14(金)</p>
+      <p>最終更新日: 2021/05/14(金)</p>
+    </div>
+    <div class="main">
+      <h1>マクロ</h1>
+      <div class="text">
+        競プロメモの最後に載せるコードがお手本ではない(あくまで参考である)癖に冗長になるのが嫌なので、LLとかrepとかのマクロは基本的に使用します。コードはパクらずに自分で書こうね！<br>
+        ただこれのせいで可読性が落ちまくってる可能性があるので、流石に使わなそうなやつ含めて今僕が使っているマクロ全部載せておきます。
+        <pre class="brush: cpp;">
+#define LL long long
+#define DB double
+#define LD long double
+#define ST string
+#define BS bitset
+#define PA pair&lt;LL,LL&gt;
+#define VE vector
+#define VL VE&lt;LL&gt;
+#define VP VE&lt;PA&gt;
+#define VVL VE&lt;VL&gt;
+#define VVVL VE&lt;VVL&gt;
+#define PQ priority_queue
+#define FI first
+#define SE second
+#define PB push_back
+#define POB pop_back
+#define PF push_front
+#define POF pop_front
+#define MP make_pair
+#define rep1(i,a,b,c) for(int i=a;i&lt;b;i+=c)
+#define rep2(i,a,b) rep1(i,a,b,1)
+#define rep3(i,a) rep2(i,0,a)
+#define rep4(a) rep3(i,a)
+#define repr1(i,a,b,c) for(int i=b-1;i&gt;=a;i-=c)
+#define repr2(i,a,b) repr1(i,a,b,1)
+#define repr3(i,a) repr2(i,0,a)
+#define repr4(a) repr3(i,a)
+#define overload4(a,b,c,d,e,...) e
+#define rep(...) overload4(__VA_ARGS__,rep1,rep2,rep3,rep4)(__VA_ARGS__)
+#define repr(...) overload4(__VA_ARGS__,repr1,repr2,repr3,repr4)(__VA_ARGS__)
+#define ALL(a) a.begin(),a.end()
+#define RALL(a) a.rbegin(),a.rend()
+#define SORT(a) sort(ALL(a))
+#define REV(a) reverse(ALL(a))
+#define UB(a,n) *upper_bound(ALL(a),n)
+#define UBn(a,n) upper_bound(ALL(a),n)-a.begin()
+#define LB(a,n) *lower_bound(ALL(a),n)
+#define LBn(a,n) lower_bound(ALL(a),n)-a.begin()
+#define INF 1000000000000000003
+#define PI 3.14159265358979323846264338327950288
+#define MOD 998244353
+#define EPS 1e-10
+        </pre>
+      </div>
+    </div>
+    <footer id="footer">
+      <div class="footer-left">
+        <a href="https://twitter.com/srim0715" class="twitter"><i class="fab fa-twitter"></i></a>
+      </div>
+      <div class="footer-right">
+        <p>αmusement 2021-<span class="last-year"></p>
+        <p>Last Update: <span class="update"></p>
+      </div>
+    </footer>
+  </body>
+</html> 
