@@ -155,7 +155,7 @@
       </div>
       <h2>実装</h2><hr color="black">
       <div class="text">
-        \(p^e\) が小さい場合に前処理 \(O(p^e)\) +クエリ \(O(e\frac{\log n}{\log p})\) でさらに高速に解くために、\(_n\mathrm{C}_r\ \mathrm{mod}\ p\) は階乗及びその逆元のテーブルを作成する方法、\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) は \(x\le p^e\) なる \((x!)_p\) を全列挙する方法を適宜取り入れている。<br>
+        \(p^e\) が小さい場合に前処理 \(O(p^e)\) +クエリ \(O(\frac{\log n}{\log p})\) でさらに高速に解くために、\(_n\mathrm{C}_r\ \mathrm{mod}\ p\) は階乗及びその逆元のテーブルを作成する方法、\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) は \(x\le p^e\) なる \((x!)_p\) を全列挙する方法を適宜取り入れている。<br>
         使用するアルゴリズム: rho method, Factorial, CRT　<a href="../macro">マクロ</a>
         <pre class="brush: cpp;">
 VVL StirlingF(int n,int k,int m){ //スターリング数のテーブル作成
