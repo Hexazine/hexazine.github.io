@@ -160,8 +160,8 @@
       </div>
       <h2>実装</h2><hr color="black">
       <div class="text">
-        \(p^e\) が小さい場合に前処理 \(O(p^e)\) +クエリ \(O(\log n)\) で解くために、\(_n\mathrm{C}_r\ \mathrm{mod}\ p\) は階乗及びその逆元のテーブルを作成する方法、\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) は \(x\le p^e\) なる \((x!)_p\) を全列挙する方法を適宜取り入れている。<br>
-        使用するアルゴリズム:rho method, Factorial, CRT
+        \(p^e\) が小さい場合に前処理 \(O(p^e)\) +クエリ \(O(e\frac{\log n}{\log p})\) でさらに高速に解くために、\(_n\mathrm{C}_r\ \mathrm{mod}\ p\) は階乗及びその逆元のテーブルを作成する方法、\(_n\mathrm{C}_r\ \mathrm{mod}\ p^e\ (e\ge 2)\) は \(x\le p^e\) なる \((x!)_p\) を全列挙する方法を適宜取り入れている。<br>
+        使用するアルゴリズム: rho method, Factorial, CRT
         <pre class="brush: cpp;">
 struct com_sn_pm{ //n&lt;=10^5,mは素数
   const int m;
@@ -351,6 +351,27 @@ int main(){
   cout&lt;&lt;c(n,r)&lt;&lt;endl;
 }
         </pre>
+        <br>
+        実行時間は以下のようであった。(実行環境はAtCoderのコードテスト)<br>
+        <br>
+        ・1 mod<br>
+        \(n=1000000000000000000,\ r=500000000000000000,\ m=1\rightarrow 0\mathrm{(verified)}:\ 7\mathrm{ms}\)<br>
+        <br>
+        ・素数mod<br>
+        \(n=200000001400000334,\ r=100000000700000256,\ m=1000000007\rightarrow 331858502:\ 183\mathrm{ms}\)<br>
+        \(n=996491788296388607,\ r=498245894148194303,\ m=998244353\rightarrow 499122177:\ 440\mathrm{ms}\)<br>
+        \(n=1000000000000000000,\ r=500000000000000000,\ m=1999999973\rightarrow 27337870:\ 899\mathrm{ms}\)<br>
+        \(n=662077814324533695,\ r=448895110005446502,\ m=13\rightarrow 7:\ 25\mathrm{ms}\)<br>
+        \(n=20000000,\ r=10000000,\ m=1000000007\rightarrow 486682686\mathrm{(verified)}:\ 72\mathrm{ms}\)<br>
+        <br>
+        ・素数積mod<br>
+        \(n=662077814324533695,\ r=448895110005446502,\ m=223092870\rightarrow 111546435:\ 29\mathrm{ms}\)<br>
+        \(n=964937842767429156,\ r=330845131511185192,\ m=393255863\rightarrow 1228333470:\ 33\mathrm{ms}\)<br>
+        \(n=1000000000000000000,\ r=500000000000000000,\ m=1930238310\rightarrow 0:\ 31\mathrm{ms}\)<br>
+        \(n=595454894999199873,\ r=43110208797520127,\ m=15\rightarrow 12:\ 26\mathrm{ms}\)<br>
+        \(n=469588,\ r=84917,\ m=223092870\rightarrow 209969760\mathrm{(verified)}:\ 31\mathrm{ms}\)<br>
+        <br>
+        ・素数冪mod<br>
       </div>
       <h2>参考文献</h2><hr color="black">
       <div class="text">
