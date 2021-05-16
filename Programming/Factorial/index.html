@@ -51,8 +51,8 @@
       <h2>multipoint evaluation 解</h2><hr color="black">
       <div class="text">
         Q. multipoint evaluation とは？<br>
-        A. ある \(k\) 次多項式があって、これの \(n\) 点での値全てを求めるやつ<br>
-        　この記事では重要ではないので詳細な説明は省くが、因数定理をベースとした考え方で、「多項式を多項式で割った余りを \(O(n\log n)\) で求めるアルゴリズム」を使って \(O(n\log^2 n+k\log k)\) で求めることができる。<br>
+        A. ある \(d\) 次多項式があって、これの \(n\) 点での値全てを求めるやつ<br>
+        　この記事では重要ではないので詳細な説明は省くが、因数定理をベースとした考え方で、「多項式を多項式で割った余りを \(O(n\log n)\) で求めるアルゴリズム」を使って \(O(n\log^2 n+d\log d)\) で求めることができる。<br>
         　\(f_s(x)\) は分割統治法を用いて乗算 \(O(s\log s)\)、計算回数 \(O(\log s)\) で計 \(O(s\log^2s)\) で求めることができ、\(O(s\log^2s)\) で multipoint evaluation を実行することで \(O(s\log^2s)=O(\sqrt k\log^2k)\) で求まる。<br>
         　しかし評価点が公差 \(s\) の等差数列を成していることに気づけば更に高速に求めることができる。
       </div>
@@ -63,14 +63,14 @@
         が成り立つ<font color=#444>\(^{\ast 1}\)</font>。この式を使って元の多項式 \(g(x)\) やある点での値 \(g(a)\) を求めることを <b>Lagrange Interpolation</b>(ラグランジュ補間)という。<br>
         　ところで、\(g(0),\ g(1),\ \cdots\ ,\ g(d)\) が与えられているとき、
         \[\begin{aligned}g(m+k)&=\sum_{i=0}^dg(i)\prod_{j=0,\ j\neq i}^d\frac{m+k-j}{i-j}\\&=\sum_{i=0}^dg(i)\left(\frac{\prod_{j=0}^d(m+k-j)}{m+k-i}\cdot\frac{1}{\prod_{j=0}^{i-1}(i-j)\cdot\prod_{j=i+1}^d(i-j)}\right)\\&=\left(\prod_{j=0}^d(m+k-j)\right)\left(\sum_{i=0}^dg(i)\cdot\frac{1}{m+k-i}\cdot\frac{1}{i!\cdot(-1)^{d-i}(d-i)!}\right)\\&=\left(\prod_{i=0}^d(m+k-i)\right)\left(\sum_{i=0}^d\frac{g(i)}{(-1)^{d-i}i!(d-i)!}\cdot\frac{1}{m+k-i}\right)\end{aligned}\]
-        がいえる。これを用いて \(g(m),\ g(m+1),\ \cdots\ ,\ g(m+e)\) を求めるとき、左側は固定された値を \(O(d)\) で1回だけ求めればよいが、右側の値は \(k\) があって変わり続けるので \(O(d)*O(e)=O(de)\) かかりそうである。しかし、
+        がいえる。これを用いて \(g(m),\ g(m+1),\ \cdots\ ,\ g(m+n)\) を求めるとき、左側は固定された値を \(O(d)\) で1回だけ求めればよいが、右側の値は \(n\) があって変わり続けるので \(O(d)*O(n)=O(nd)\) かかりそうである。しかし、
         \[a(x):=\frac{g(x)}{(-1)^{d-x}x!(d-x)!},\ b(x):=\frac{1}{m-d+x}\]
         とおくと、
         \[\sum_{i=0}^d\frac{g(i)}{(-1)^{d-i}i!(d-i)!}\cdot\frac{1}{m+k-i}=\sum_{i=0}^da(i)b(k+d-i)\]
-        となり、畳み込みになっていることが分かる。よって、\(a(0),\ a(1),\ \cdots\ ,\ a(d)\) 及び \(b(0),\ b(1),\ \cdots\ ,\ b(2d)\) を \(O(d)\) で求めておけば、求めたいものである
-        \[a(0)b(d)+a(1)b(d-1)+\ \cdots\ +a(d)b(0),\]\[\ a(0)b(d+1)+a(1)b(d)+\ \cdots\ +a(d)b(1),\]\[\vdots\]\[a(0)b(2d)+a(1)b(2d-1)+\ \cdots\ +a(d)b(d)\]
-        は<a href="../AMC">任意mod畳み込み</a>で \(O(d\log d)\) で求められる。よって \(g(m),\ g(m+1),\ \cdots\ ,\ g(m+d)\) を \(O(d\log d)\) で求められた。<br>
-        　\(g(n),\ g(n+s),\ \cdots\ ,\ g(n+sd)\) が与えられているとき、\(d\) 次多項式 \(h(x):=g(sx+n)\) の \(d+1\) 点での値 \(h(0),\ h(1),\ \cdots\ ,\ h(d)\) が与えられているので、\(h(\frac{m-n}{s}),\ h(\frac{m-n}{s}+1),\ \cdots\ ,\ h(\frac{m-n}{s}+d)\) を補間することで \(g(m),\ g(m+1),\ \cdots\ ,\ g(m+d)\)
+        となり、畳み込みになっていることが分かる。よって、\(a(0),\ a(1),\ \cdots\ ,\ a(d)\) 及び \(b(0),\ b(1),\ \cdots\ ,\ b(n+d)\) を \(O(n+d)\) で求めておけば、求めたいものである
+        \[a(0)b(d)+a(1)b(d-1)+\ \cdots\ +a(d)b(0),\]\[\ a(0)b(d+1)+a(1)b(d)+\ \cdots\ +a(d)b(1),\]\[\vdots\]\[a(0)b(n+d)+a(1)b(n+d-1)+\ \cdots\ +a(d)b(n)\]
+        は<a href="../AMC">任意mod畳み込み</a>で \(O((n+d)\log(n+d))\) で求められる。よって \(g(m),\ g(m+1),\ \cdots\ ,\ g(m+n)\) を \(O((n+d)\log(n+d))\) で求められた。<br>
+        　一般に、\(d\) 次多項式 \(g(x)\) の初項 \(p\)、公差 \(q\) であるような \(d+1\) 点での値 \(g(p),\ g(p+q),\ \cdots\ ,\ g(p+qd)\) が与えられているとき、\(d\) 次多項式 \(h(x):=g(p+qx)\) の \(d+1\) 点での値 \(h(0),\ h(1),\ \cdots\ ,\ h(d)\) が与えられているのと同じなので、\(h(\frac{m-p}{q}),\ h(\frac{m-p}{q}+1),\ \cdots\ ,\ h(\frac{m-p}{q}+n)\) を補間することで \(g(m),\ g(m+q),\ \cdots\ ,\ g(m+qn)\) を　\(O((n+d)\log(n+d))\) で求められる。
       </div>
       <h2>計算量</h2><hr color="black">
       <div class="text">
