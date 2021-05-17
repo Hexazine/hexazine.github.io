@@ -37,13 +37,12 @@
       <h1>高速階乗計算</h1>
       <div class="text">
         \(\prod_{i=1}^k(n+i)\ \mathrm{mod}\ p\) を \(O(\sqrt k\log k)\) で計算するよ すごいね<br>
-        \(n=0\) のとき \(k!\ \mathrm{mod}\ p\) になるよ
+        \(n=0\) のとき \(k!\ \mathrm{mod}\ p\) になるよ<br>
+        1年前に習得したアルゴリズムなんだけど、参考文献が見つからない...<br>
+        仕方ないので、一から復習することにした
       </div>
       <h2>方針</h2><hr color="black">
       <div class="text">
-        1年前に習得したアルゴリズムなんだけど、参考文献が見つからない...<br>
-        仕方ないので、一から復習することにした<br>
-        <br>
         \(f_d(x):=\prod_{i=1}^d(x+i),\ s=[\sqrt k]\) とすると、
         \[\prod_{i=1}^k(n+i)=\left(\prod_{i=0}^{s-1}f_s(n+si)\right)\prod_{i=s^2+1}^{k}(n+i)\]
         となるが、右側は愚直に \(O(\sqrt k)\) で計算できるからよくて、左側を「\(s\) 次の多項式の \(s\) 点での値の積」と捉えられると multipoint evaluation を思いつくので、やってみる
