@@ -45,7 +45,7 @@
       <div class="text">
         \(f_d(x):=\prod_{i=1}^d(x+i),\ s=[\sqrt k]\) とすると、
         \[\prod_{i=1}^k(n+i)=\left(\prod_{i=0}^{s-1}f_s(n+si)\right)\prod_{i=s^2+1}^{k}(n+i)\]
-        となるが、右側は愚直に \(O(\sqrt k)\) で計算できるからよくて、左側を「\(s\) 次の多項式の \(s\) 点での値の積」と捉えられると multipoint evaluation を思いつくので、やってみる
+        となるが、右側は愚直に \(O(\sqrt k)\) で計算できるからよくて、左側を「\(s\) 次多項式の \(s\) 点での値の積」と捉えられると multipoint evaluation を思いつくので、やってみる
       </div>
       <h2>multipoint evaluation 解</h2><hr color="black">
       <div class="text">
@@ -62,7 +62,7 @@
         が成り立つ<font color=#444>\(^{\ast 1}\)</font>。この式を使って元の多項式 \(g(x)\) やある点での値 \(g(a)\) を求めることを <b>Lagrange Interpolation</b>(ラグランジュ補間)という。<br>
         　ところで、\(g(0),\ g(1),\ \cdots\ ,\ g(d)\) が与えられているとき、
         \[\begin{aligned}g(m+k)&=\sum_{i=0}^dg(i)\prod_{j=0,\ j\neq i}^d\frac{m+k-j}{i-j}\\&=\sum_{i=0}^dg(i)\left(\frac{\prod_{j=0}^d(m+k-j)}{m+k-i}\cdot\frac{1}{\prod_{j=0}^{i-1}(i-j)\cdot\prod_{j=i+1}^d(i-j)}\right)\\&=\left(\prod_{j=0}^d(m+k-j)\right)\left(\sum_{i=0}^dg(i)\cdot\frac{1}{m+k-i}\cdot\frac{1}{i!\cdot(-1)^{d-i}(d-i)!}\right)\\&=\left(\prod_{i=0}^d(m+k-i)\right)\left(\sum_{i=0}^d\frac{g(i)}{(-1)^{d-i}i!(d-i)!}\cdot\frac{1}{m+k-i}\right)\end{aligned}\]
-        がいえる。これを用いて \(g(m),\ g(m+1),\ \cdots\ ,\ g(m+n)\) を求めるとき、左側は少しの工夫で各 \(k\) における値全てを \(O(n+d)\) で求められるが、右側は \(O(d)*O(n)=O(nd)\) かかりそうである。しかし、
+        がいえる。これを用いて \(g(m),\ g(m+1),\ \cdots\ ,\ g(m+n)\) を求めるとき、左側は少しの工夫で各 \(k\) における値全てを \(O(n+d)\) で求められるが、右側は \(O(d)\cdot O(n)=O(nd)\) かかりそうである。しかし、
         \[a(x):=\frac{g(x)}{(-1)^{d-x}x!(d-x)!},\ b(x):=\frac{1}{m-d+x}\]
         とおくと、
         \[\sum_{i=0}^d\frac{g(i)}{(-1)^{d-i}i!(d-i)!}\cdot\frac{1}{m+k-i}=\sum_{i=0}^da(i)b(k+d-i)\]
@@ -75,23 +75,23 @@
       </div>
       <h2>高速階乗計算</h2><hr color="black">
       <div class="text">
-        
-      </div>
-      <h2>まとめ</h2><hr color="black">
-      <div class="text">
-        
+        今求めたいのは \(f_s(n),\ f_s(n+s),\ \cdots\ ,\ f_s(n+s(s-1))\) である。言い換えると、簡単のために \(d+1\) 個の要素を持つ集合 \(F_d(i)\) を
+        \[F_d(i):=\{f_d(n+i),\ f_d(n+i+s),\ \cdots\ ,\ f_d(n+i+sd)\}\]
+        と定義したときの \(F_s(0)\) を求めたい。<br>
+        　\(F_d(0)\) が分かっているとき、\(F_{d+1}(0)\) の末尾を除く \(d+1\) 要素は \(f_{d+1}(n+sk)=f_d(n+sk)\cdot(n+sk+d+1)\) なので \(O(d)\) で求めることができ、最後の要素は定義通りに計算して \(O(d)\) で求められるため、\(F_{d+1}(0)\) を \(O(d)\) で求められる。また、
+        \[f_d(n)\cdot f_d(n+d)=f_{2d}(n),\]\[f_d(n+s)\cdot f_d(n+d+s)=f_{2d}(n+s),\]\[\vdots\]\[f_d(n+sd)\cdot f_d(n+d+sd)=f_{2d}(n+sd)\]
+        及び
+        \[f_d(n+sd)\cdot f_d(n+sd+d)=f_{2d}(n+sd),\]\[f_d(n+sd+s)\cdot f_d(n+sd+d+s)=f_{2d}(n+s(d+1)),\]\[\vdots\]\[f_d(n+sd+sd)\cdot f_d(n+sd+d+sd)=f_{2d}(n+s(2d))\]
+        が言えるので、\(F_d(d),\ F_d(sd),\ F_d(sd+d)\) を求められれば \(F_{2d}(0)\) を \(O(d)\) で求められることが分かる。
+        \(F_d\) は \(d\) 次多項式 \(f_d\) の \(d+1\) 点での値の集合なので、Lagrange Interpolation を用いて3つの集合を \(O(d\log d)\) で求められる。<br>
+        　以上より、\(F_s(0)\) は \(F_1(0)=\{n+1,\ n+s+1\}\) から始めて \(O(s\log s)=O(\sqrt{k}\log k)\) で求められたので、\(\prod_{i=1}^k(n+i)\ \mathrm{mod}\ p\) を \(O(\sqrt k\log k)\) で計算できた。
       </div>
       <h2>実装</h2><hr color="black">
       <div class="text">
-        
-        使用するアルゴリズム:　<a href="../macro">マクロ</a>
+        使用するアルゴリズム: Arbitrary-Mod-Convolution　<a href="../macro">マクロ</a>
         <pre class="brush: cpp;">
 
         </pre>
-      </div>
-      <h2>参考文献</h2><hr color="black">
-      <div class="text">
-        <a href="https://37zigen.com/multipoint-evaluation">Multipoint Evaluation の アルゴリズム – 37zigenのHP</a><br>
       </div>
       <hr color="black">
       <div class="text">
